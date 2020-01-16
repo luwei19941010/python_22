@@ -140,6 +140,8 @@ class School(object):
         # 员工字典，格式为：{"销售部": [用户对象,用户对象,] }
         self.user_dict = {}
 
+
+
     def invite(self, department, user_object):
         """
         招聘，到用户信息之后，将用户按照指定结构添加到 user_dict结构中。
@@ -147,7 +149,11 @@ class School(object):
         :param user_object: 用户对象，包含用户信息。
         :return:
         """
-        pass
+        if department not in self.user_dict:
+            self.user_dict[department]=[user_object]
+            return
+        self.user_dict[department].append(user_object)
+        return
 
     def dimission(self, username, department=None):
         """
@@ -156,14 +162,44 @@ class School(object):
         :param department: 部门名称，如果未指定部门名称，则遍历找到所有员工信息，并将在员工字典中移除。
         :return:
         """
-        pass
+        self.username=username
+        if department:
+            user_msg=self.user_dict.get(department)
+           # print(type(user_msg))
+            for i in user_msg:
+                i.name==self.username
+                user_msg.remove(i)
+        else:
+            for a,b in self.user_dict.items():
+                for i in b[::-1]:
+                    if i.name ==self.username:
+                        b.remove(i)
 
     def run(self):
         """
         主程序
         :return:
         """
-        pass
+
+        while True:
+            user_choice=input('请选择：1.invite,2.dimission:')
+            if user_choice=='1':
+                user_depart = input('department:')
+                user_name=input('usernmae:')
+                user_email=input('email:')
+                user_age=input('age:')
+                self.invite(user_depart,User(user_name,user_email,user_age))
+                #obj=User(None,None,None)
+                #setattr(obj,'name',user_name)
+            else:
+                user_depart = input('department:(N)')
+                user_name = input('usernmae:')
+                if user_depart.upper()=='N':
+                    self.dimission(user_name)
+                else:
+                    self.dimission(user_name,user_depart)
+            print(self.user_dict)
+
 
 
 if __name__ == '__main__':

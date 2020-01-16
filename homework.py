@@ -26,16 +26,31 @@ MIDDLEWARE_CLASSES = [
 ]
 
 from wsgiref.simple_server import make_server
+import importlib
+
+
+
+
+
 
 class View(object):
     def login(self):
-        return '登陆'
+        sum=''
+        for i in MIDDLEWARE_CLASSES:
+            path, cls = i.rsplit('.', maxsplit=1)
+            path1=importlib.import_module(path)
+            a1=getattr(path1,cls)().process()
+            sum=sum+' '+a1
+        return sum+'登陆'+sum
 
     def logout(self):
         return '等处'
 
     def index(self):
-        return '首页'
+        csrf = importlib.import_module('utils.csrf')
+        a = 'CrsfMiddleware'
+        a1=getattr(csrf, a)().process()
+        return '首页'+a1
 
 
 def func(environ,start_response):
